@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Network Information</string>
+    <string name="about_copyright">© 2011 David Simmons</string>
+    <string name="about_url">http://cafbit.com/</string>
+    <string name="about_description">Network Information is a simple utility to show your current IP addresses—nothing more, nothing less.  There is also a widget you can add to your home screen which always shows your current IP address.</string>
+</resources>
