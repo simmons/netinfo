@@ -37,24 +37,24 @@ import android.net.ConnectivityManager;
 import android.widget.RemoteViews;
 
 public class NetInfoAppWidgetProvider extends AppWidgetProvider {
-	
-	static private Map<Integer,AppWidgetManager> widgetIdMap =
-		new HashMap<Integer,AppWidgetManager>();
-	private String addressText = "";
-	
-	@Override
-	public void onDeleted(Context context, int[] appWidgetIds) {
-		for (int id : appWidgetIds) {
-			widgetIdMap.remove(id);
-		}
-	}
+    
+    static private Map<Integer,AppWidgetManager> widgetIdMap =
+        new HashMap<Integer,AppWidgetManager>();
+    private String addressText = "";
+    
+    @Override
+    public void onDeleted(Context context, int[] appWidgetIds) {
+        for (int id : appWidgetIds) {
+            widgetIdMap.remove(id);
+        }
+    }
 
-	@Override
-	public void onDisabled(Context context) {
-		widgetIdMap.clear();
-	}
+    @Override
+    public void onDisabled(Context context) {
+        widgetIdMap.clear();
+    }
 
-	@Override
+    @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         final int N = appWidgetIds.length;
         
@@ -62,22 +62,22 @@ public class NetInfoAppWidgetProvider extends AppWidgetProvider {
 
         // Perform this loop procedure for each App Widget that belongs to this provider
         for (int i=0; i<N; i++) {
-        	widgetIdMap.put(appWidgetIds[i], appWidgetManager);
+            widgetIdMap.put(appWidgetIds[i], appWidgetManager);
             int appWidgetId = appWidgetIds[i];
             render(context, appWidgetManager, appWidgetIds[i]);
         }
     }
-	
-	public void updateKnownWidgets(Context context) {
-		// update the address string
+    
+    public void updateKnownWidgets(Context context) {
+        // update the address string
         addressText = scan(context);
         // update the widgets
-		for (Map.Entry<Integer,AppWidgetManager> entry : widgetIdMap.entrySet()) {
-			render(context, entry.getValue(), entry.getKey());
-		}
-	}
-	
-	public void render(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
+        for (Map.Entry<Integer,AppWidgetManager> entry : widgetIdMap.entrySet()) {
+            render(context, entry.getValue(), entry.getKey());
+        }
+    }
+    
+    public void render(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.netinfo_appwidget);
         views.setTextViewText(R.id.text, addressText);
 
@@ -87,39 +87,39 @@ public class NetInfoAppWidgetProvider extends AppWidgetProvider {
         views.setOnClickPendingIntent(R.id.text, pendingIntent);
         
         appWidgetManager.updateAppWidget(appWidgetId, views);
-	}
-	
-	@Override
+    }
+    
+    @Override
     public void onReceive(Context context, Intent intent) {
         if (intent.getAction().equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
-        	updateKnownWidgets(context);
+            updateKnownWidgets(context);
         }
         super.onReceive(context, intent);
     }
-	
-	private String scan(Context context) {
-		
+    
+    private String scan(Context context) {
+        
         NetUtil netUtil = new NetUtil(context);
-		
+        
         List<InterfaceInfo> interfaces;
-		try {
-			interfaces = netUtil.getNetworkInformation();
-		} catch (NetInfoException e) {
-			return e.getMessage();
-		}
-		SortedSet<Address> addresses = new TreeSet<Address>();
-		for (InterfaceInfo ii : interfaces) {
-			for (Address a : ii.getAddresses()) {
-				if (! a.isLoopback()) {
-					addresses.add(a);
-				}
-			}
-		}
-		if (addresses.isEmpty()) {
-			return "no address";
-		} else {
-			return addresses.iterator().next().getIPAddress();
-		}
-	}
+        try {
+            interfaces = netUtil.getNetworkInformation();
+        } catch (NetInfoException e) {
+            return e.getMessage();
+        }
+        SortedSet<Address> addresses = new TreeSet<Address>();
+        for (InterfaceInfo ii : interfaces) {
+            for (Address a : ii.getAddresses()) {
+                if (! a.isLoopback()) {
+                    addresses.add(a);
+                }
+            }
+        }
+        if (addresses.isEmpty()) {
+            return "no address";
+        } else {
+            return addresses.iterator().next().getIPAddress();
+        }
+    }
 
 }

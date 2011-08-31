@@ -40,11 +40,11 @@ import android.widget.TextView;
 
 public class NetInfoActivity extends Activity {
 
-	public static final String TAG = "NetInfo";
-	
-	private ListView listView;
-	private NetUtil netUtil;
-	
+    public static final String TAG = "NetInfo";
+    
+    private ListView listView;
+    private NetUtil netUtil;
+    
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,63 +56,63 @@ public class NetInfoActivity extends Activity {
         netUtil = new NetUtil(this);
     }
     
-	@Override
-	protected void onResume() {
-		super.onResume();
-		scan();
-	}
-	
-	@Override
-	protected void onPause() {
-		super.onPause();
-	}
+    @Override
+    protected void onResume() {
+        super.onResume();
+        scan();
+    }
+    
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-	    MenuInflater inflater = getMenuInflater();
-	    inflater.inflate(R.menu.options_menu, menu);
-	    return true;
-	}
-	
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-	    // Handle item selection
-	    switch (item.getItemId()) {
-	    case R.id.about:
-	    	about();
-	    	return true;
-	    default:
-	        return super.onOptionsItemSelected(item);
-	    }
-	}
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.options_menu, menu);
+        return true;
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+        case R.id.about:
+            about();
+            return true;
+        default:
+            return super.onOptionsItemSelected(item);
+        }
+    }
 
-	private void scan() {
-		// fetch interface information
-		List<InterfaceInfo> interfaces;
-		try {
-			interfaces = netUtil.getNetworkInformation();
-		} catch (NetInfoException e) {
-			Log.e(TAG, "error: "+e.getMessage(), e);
-			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder
-				.setTitle("Error")
-				.setMessage(e.getMessage())
-			    .setCancelable(false)
-			    .setNeutralButton("OK", new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int id) {
-						NetInfoActivity.this.finish();
-					}
-			    });
-			AlertDialog alert = builder.create();
-			alert.show();
-			return;
-		}
-		
-		InterfaceInfoAdapter adapter = new InterfaceInfoAdapter(this, interfaces);
-		listView.setAdapter(adapter);
-	}
-	
-	private void about() {
+    private void scan() {
+        // fetch interface information
+        List<InterfaceInfo> interfaces;
+        try {
+            interfaces = netUtil.getNetworkInformation();
+        } catch (NetInfoException e) {
+            Log.e(TAG, "error: "+e.getMessage(), e);
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder
+                .setTitle("Error")
+                .setMessage(e.getMessage())
+                .setCancelable(false)
+                .setNeutralButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        NetInfoActivity.this.finish();
+                    }
+                });
+            AlertDialog alert = builder.create();
+            alert.show();
+            return;
+        }
+        
+        InterfaceInfoAdapter adapter = new InterfaceInfoAdapter(this, interfaces);
+        listView.setAdapter(adapter);
+    }
+    
+    private void about() {
         LayoutInflater factory = LayoutInflater.from(this);
         View view = factory.inflate(R.layout.about,null);
         TextView urlView = (TextView) view.findViewById(R.id.about_url);
@@ -120,14 +120,14 @@ public class NetInfoActivity extends Activity {
         TextView descriptionView = (TextView) view.findViewById(R.id.about_description);
         descriptionView.setMovementMethod(new ScrollingMovementMethod());
 
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder
-			.setTitle("About")
-			.setIcon(android.R.drawable.ic_dialog_info)
-			.setView(view)
-		    .setCancelable(false)
-		    .setNeutralButton("OK", null);
-		AlertDialog alert = builder.create();
-		alert.show();
-	}
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder
+            .setTitle("About")
+            .setIcon(android.R.drawable.ic_dialog_info)
+            .setView(view)
+            .setCancelable(false)
+            .setNeutralButton("OK", null);
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
 }
